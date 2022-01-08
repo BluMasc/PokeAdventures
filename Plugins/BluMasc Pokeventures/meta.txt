@@ -1,0 +1,4 @@
+Name         = BluMascs Pokeventures (v19)
+Version      = 0.9.9
+Link         = "https://reliccastle.com/resources/854/"
+Credits      = BluMasc, boonzeet, ThatWelshOne_
