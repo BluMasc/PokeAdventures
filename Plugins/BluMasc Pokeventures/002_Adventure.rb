@@ -46,19 +46,19 @@ class Adventure
 		case chances
 		when 99
 			if  PokeventureConfig::CollectRandomItem
-				items.append(PokeventureConfig::Items[:ultrarare].random)
+				items.append(PokeventureConfig::Items[:ultrarare].sample)
 			end
 		when 98,97,96,95,94
 			if  PokeventureConfig::CollectRandomItem
-				items.append(PokeventureConfig::Items[:rare].random)
+				items.append(PokeventureConfig::Items[:rare].sample)
 			end
 		when 93,92,91,90,89,88,87,86,85,84
 			if  PokeventureConfig::CollectRandomItem
-				items.append(PokeventureConfig::Items[:uncommon].random)
+				items.append(PokeventureConfig::Items[:uncommon].sample)
 			end
 		when 83,82,81,80,79,78,77,76,75,74,73,72,71,70,69
 			if  PokeventureConfig::CollectRandomItem
-				items.append(PokeventureConfig::Items[:common].random)
+				items.append(PokeventureConfig::Items[:common].sample)
 			end
 		else
 			battle
@@ -105,7 +105,7 @@ class Adventure
 			if win
 				poke = Pokemon.new(encounter[0],encounter[1])
 				if PokeventureConfig::FindFriends && 0 == rand(PokeventureConfig::ChanceToFindFriend) && !party_full? 
-					poke.generateBrilliant if PokeventureConfig::AreFoundFriendsBrilliant
+					poke.generateBrilliant if (PokeventureConfig::AreFoundFriendsBrilliant && defined?(poke.generateBrilliant))
 					poke.name= nil
 					poke.owner= Pokemon::Owner.new_from_trainer($Trainer)
 					poke.obtain_method= 0  
@@ -150,7 +150,7 @@ class Adventure
 		@items = []
 	end
 	def harvestItemsSilent
-		@items.each { |x| $PokemonBag.pbStoreItem(x,1) if !x.nil?}
+		giveAdventureItemList(@items)
 		@items = []
 	end
 	def sendEveryoneToBox
@@ -227,4 +227,24 @@ class Adventure
 		end
     end
 	end
+end
+
+def giveAdventureItemList(itemlist)
+  list = itemlist.dup.compact()
+  string = ""
+  while list.length() > 0
+    item = list.pop
+    count = list.tally[item]
+    if count
+      count+=1
+    else
+      count=1
+    end
+    itemdata = GameData::Item.get(item)
+    name = (count>1) ? itemdata.name_plural : itemdata.name
+    string += count.to_s+" "+name+", "
+    $PokemonBag.pbStoreItem(item,count)
+    list.delete(item)
+  end
+  Kernel.pbMessage(string[0...-2])
 end

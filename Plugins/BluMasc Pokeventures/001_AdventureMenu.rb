@@ -276,10 +276,14 @@ class Adventure_Scene
 		@cursorpos = 0
 		@off = false
 		@fastcollect = false
-		@sprites["background"] = IconSprite.new(0,0,@viewport)
-		@sprites["background"] = ScrollingSprite.new(@viewport)
-		@sprites["background"].speed = 1
-		@sprites["background"].setBitmap(_INTL("Graphics/Pictures/Pokeventures/bg"))
+		if defined?(ScrollingSprite)
+			@sprites["background"] = IconSprite.new(0,0,@viewport)
+			@sprites["background"] = ScrollingSprite.new(@viewport)
+			@sprites["background"].speed = 1
+			@sprites["background"].setBitmap(_INTL("Graphics/Pictures/Pokeventures/bg"))
+		else
+			addBackgroundPlane(@sprites,"bg","Pokeventures/bg",@viewport)
+		end
 		@sprites["base"] = IconSprite.new(0,0,@viewport)
 		@sprites["base"].setBitmap("Graphics/Pictures/Pokeventures/fg.png")
 		@sprites["base"].ox = @sprites["base"].bitmap.width/2
