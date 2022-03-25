@@ -1,1 +1,4 @@
 0.3.6
+
+Fixed some Flowers on Route 4
+Fixed Tile Problem with vine decoration
