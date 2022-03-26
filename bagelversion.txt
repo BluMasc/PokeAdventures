@@ -1,4 +1,4 @@
 0.3.7
 
 Added Quest Markers
-Added Pokémon Swarms
+Added Pokemon Swarms
