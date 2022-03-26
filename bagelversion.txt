@@ -1,4 +1,4 @@
-0.3.6
+0.3.7
 
-Fixed some Flowers on Route 4
-Fixed Tile Problem with vine decoration
+Added Quest Markers
+Added Pokémon Swarms
