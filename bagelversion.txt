@@ -1,4 +1,3 @@
-0.3.7
+0.3.8
 
-Added Quest Markers
-Added Pokemon Swarms
+Fixed major crash in safari zone
