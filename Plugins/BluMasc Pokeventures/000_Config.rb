@@ -7,24 +7,30 @@ module PokeventureConfig
   #Item Collection
   CollectRandomItem = true #Collect Items from the Table below
   CollectItemsFromBattles = true # Collect Items from defeated Pokemon
-  Items = {
-    :common => [:POKETOY, :POKEBALL, :FRESHWATER, :REPEL, :HEARTSCALE],
-    :uncommon => [:THUNDERSTONE, :WATERSTONE, :LEAFSTONE, :MOONSTONE, :FIRESTONE,
-                  :SUNSTONE, :SHINYSTONE, :DUSKSTONE, :DAWNSTONE,
-				  :EVERSTONE, :OVALSTONE],
-	:rare => [:LEMONADE, :ENERGYROOT, :PEARL, :BIGPEARL, :SUPERREPEL],  
-    :ultrarare => [:MASTERBALL, :PEARLSTRING],
-  }
+  # Form of this list is [ItemID,chance]
+  Items = [
+    [:POKETOY,30], [:POKEBALL,30], [:FRESHWATER,30], [:REPEL,30], [:HEARTSCALE,16],
+    [:THUNDERSTONE,10], [:WATERSTONE,10], [:LEAFSTONE,10], [:MOONSTONE,10], [:FIRESTONE,10],
+    [:SUNSTONE,10], [:SHINYSTONE,10], [:DUSKSTONE,10], [:DAWNSTONE,10],
+	[:EVERSTONE,10], [:OVALSTONE,10],[:LEMONADE,10], [:ENERGYROOT,10], [:PEARL,10], [:BIGPEARL,10], [:SUPERREPEL,10],  
+    [:MASTERBALL,1], [:PEARLSTRING,1]
+  ]
   ChanceToGetEnemyItem = 5 # as a 1 in x chance
   # Friends
   FindFriends = true # If there is Space should there be a chance for wild pokèmon to join you.
-  ChanceToFindFriend = 1 # as a 1 in x chance
+  ChanceToFindFriend = 5 # as a 1 in x chance
   AreFoundFriendsBrilliant = true #have higher ivs and a higher shiny chance
+  ChanceToFindEggs = true
   # Exp
   GainExp = true # should the pokemon gain exp through adventuring
   # Wild Pokemon
   GlobalPkmn = false # should this script use the global encounter list everywhere instead of the specific map encounters.
-  PkmnList = [:PIKACHU,:CHARMANDER,:SQUIRTLE,:BULBASAUR,:EEVEE]
+  # Form of this list is [ItemID,chance]
+  PkmnList = [[:PIKACHU,1], [:CHARMANDER,3], [:SQUIRTLE,3], [:BULBASAUR,3], [:EEVEE,1]]
+  # Form of this list is [ItemID,chance]
+  EggList = [[:PICHU,5],[:CLEFFA,5],[:IGGLYBUFF,5],[:TOGEPI,5],[:TYROGUE,5],[:SMOOCHUM,5],[:ELEKID,5],[:MAGBY,5],[:BUDEW,5],
+            [:CHINGLING,5],[:BONSLY,5],[:MIMEJR,5],[:HAPPINY,5],[:MUCHLAX,5],[:RIOLU,5],[:MANTYKE,5],[:PHIONE,2],
+            [:MANAPHY,1],[:KUBFU,1]]
   GlobalLeveling = true # makes the level of the encounters balanced around the number of badges instead of the location (always on if globalPkmn is on)
   #level per badge [min,max] can add more if you have more badges in your game
   PkmnLevel = [
@@ -51,6 +57,13 @@ end
 #-------------------------------------------------------------------------------
 GameData::EncounterType.register({
   :id => :Adventure,
+  :type => :none,
+  :trigger_chance => 1,
+  :old_slots => [50, 20, 10, 5, 5, 5, 5],
+})
+
+GameData::EncounterType.register({
+  :id => :AdventureEggs,
   :type => :none,
   :trigger_chance => 1,
   :old_slots => [50, 20, 10, 5, 5, 5, 5],

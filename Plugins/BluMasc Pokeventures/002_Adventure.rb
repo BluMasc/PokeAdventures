@@ -42,24 +42,16 @@ class Adventure
 		end
 	end
 	def pbAdventuringEvent
-		chances = rand(100)
-		case chances
-		when 99
-			if  PokeventureConfig::CollectRandomItem
-				items.append(PokeventureConfig::Items[:ultrarare].sample)
+		chances = rand(500)
+		if chances >269 && PokeventureConfig::CollectRandomItem
+			@items.append(pbGetItem)
+		elsif chances==59 && PokeventureConfig::ChanceToFindEggs#egg
+			encounter = $PokemonEncounters.choose_wild_pokemon(:AdventureEggs)
+			encounter = [nil, nil] if encounter.nil?
+			if PokeventureConfig::GlobalPkmn
+				encounter[0] = pbGetEgg
 			end
-		when 98,97,96,95,94
-			if  PokeventureConfig::CollectRandomItem
-				items.append(PokeventureConfig::Items[:rare].sample)
-			end
-		when 93,92,91,90,89,88,87,86,85,84
-			if  PokeventureConfig::CollectRandomItem
-				items.append(PokeventureConfig::Items[:uncommon].sample)
-			end
-		when 83,82,81,80,79,78,77,76,75,74,73,72,71,70,69
-			if  PokeventureConfig::CollectRandomItem
-				items.append(PokeventureConfig::Items[:common].sample)
-			end
+			pbGenerateAdEgg(encounter[0])
 		else
 			battle
 		end
@@ -85,7 +77,7 @@ class Adventure
 		encounter = $PokemonEncounters.choose_wild_pokemon(:Adventure)
 		encounter = [nil, nil] if encounter.nil?
 		if PokeventureConfig::GlobalPkmn
-			encounter[0] = PokeventureConfig::PkmnList.sample
+			encounter[0] = pbGetPokemon
 		end
 		if !encounter.nil? && !encounter[0].nil?
 			if PokeventureConfig::GlobalLeveling || encounter[1].nil?
@@ -104,7 +96,7 @@ class Adventure
 			end
 			if win
 				poke = Pokemon.new(encounter[0],encounter[1])
-				if PokeventureConfig::FindFriends && 0 == rand(PokeventureConfig::ChanceToFindFriend) && !party_full? 
+				if PokeventureConfig::FindFriends && 0 == rand(PokeventureConfig::ChanceToFindFriend-1) && !party_full? 
 					poke.generateBrilliant if (PokeventureConfig::AreFoundFriendsBrilliant && defined?(poke.generateBrilliant))
 					poke.name= nil
 					poke.owner= Pokemon::Owner.new_from_trainer($Trainer)
@@ -226,6 +218,64 @@ class Adventure
 			pkmn.learn_move(i[1]) if i[0]==pkmn.level   # Learned a new move
 		end
     end
+	end
+	def pbGetItem
+		items = PokeventureConfig::Items
+		items.sort! { |a, b| b[1] <=> a[1] }
+		chance_total = 0
+		items.each { |a| chance_total += a[1] }
+		rnd = rand(chance_total)
+		item = nil
+		items.each do |itm|
+			rnd -= itm[1]
+			next if rnd >= 0
+			item = itm[0]
+			break
+		end
+		return item
+	end
+	def pbGetPokemon
+		pkmn = PokeventureConfig::PkmnList
+		pkmn.sort! { |a, b| b[1] <=> a[1] }
+		chance_total = 0
+		pkmn.each { |a| chance_total += a[1] }
+		rnd = rand(chance_total)
+		item = nil
+		pkmn.each do |itm|
+			rnd -= itm[1]
+			next if rnd >= 0
+			item = itm[0]
+			break
+		end
+		return item
+	end
+	def pbGetEgg
+		eggs = PokeventureConfig::EggList
+		eggs.sort! { |a, b| b[1] <=> a[1] }
+		chance_total = 0
+		eggs.each { |a| chance_total += a[1] }
+		rnd = rand(chance_total)
+		item = nil
+		eggs.each do |itm|
+			rnd -= itm[1]
+			next if rnd >= 0
+			item = itm[0]
+			break
+		end
+		return item
+	end
+	def pbGenerateAdEgg(pkmn)
+		return false if !pkmn || party_full?
+		pkmn = Pokemon.new(pkmn, Settings::EGG_LEVEL) if !pkmn.is_a?(Pokemon)
+		# Set egg's details
+		pkmn.name           = _INTL("Egg")
+		pkmn.steps_to_hatch = pkmn.species_data.hatch_steps
+		pkmn.obtain_text    = "Found on an adventure"
+		pkmn.calc_stats
+		pkmn.generateBrilliant if (PokeventureConfig::AreFoundFriendsBrilliant && defined?(poke.generateBrilliant))
+		# Add egg to party
+		party[party.length] = pkmn
+		return true
 	end
 end
 
