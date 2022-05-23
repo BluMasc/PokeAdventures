@@ -208,7 +208,7 @@ class Adventure
       end
     end
     # Modify Exp gain based on EXP Charm's Presence
-    exp = (exp * 1.5).floor if GameData::Item.exists?(:EXPCHARM) && $PokemonBag.pbHasItem?(:EXPCHARM)
+    exp = (exp * 1.5).floor if GameData::Item.exists?(:EXPCHARM) && $bag.has?(:EXPCHARM)
     oldlevel = pkmn.level
     pkmn.exp += exp   # Gain Exp
     if !pkmn.level==oldlevel

@@ -78,7 +78,9 @@ SaveData.register(:adventure_party) do
   }
 end
 
-Events.onStepTaken += proc { |_sender,_e|
-  $Adventure.newStep
-}
+EventHandlers.add(:on_player_step_taken, :continue_adventure,
+  proc {
+    $Adventure.newStep
+  }
+)
 
